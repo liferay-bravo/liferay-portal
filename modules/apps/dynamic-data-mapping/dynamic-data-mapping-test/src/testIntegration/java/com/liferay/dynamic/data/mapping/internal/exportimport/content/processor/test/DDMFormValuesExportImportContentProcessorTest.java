@@ -392,7 +392,8 @@ public class DDMFormValuesExportImportContentProcessorTest {
 		return journalDDMForm;
 	}
 
-	private DDMFormInstance _createFormInstanceWithDocLib(Group group)
+	private DDMFormInstance _createFormInstanceWithDocLib(
+			Group group, String className)
 		throws Exception {
 
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
@@ -401,7 +402,7 @@ public class DDMFormValuesExportImportContentProcessorTest {
 			ddmForm, "DocumentsAndMedia9t17");
 
 		return DDMFormInstanceTestUtil.addDDMFormInstance(
-			ddmForm, group, TestPropsValues.getUserId());
+			ddmForm, group, className, TestPropsValues.getUserId());
 	}
 
 	private void _initDLReferences() throws Exception {
@@ -421,7 +422,8 @@ public class DDMFormValuesExportImportContentProcessorTest {
 		_fileEntry = thumbnailCapability.setLargeImageId(
 			_fileEntry, _fileEntry.getFileEntryId());
 
-		_formInstance = _createFormInstanceWithDocLib(_stagingGroup);
+		_formInstance = _createFormInstanceWithDocLib(
+			_stagingGroup, JournalArticle.class.getName());
 
 		DDMStructure structure = _formInstance.getStructure();
 
