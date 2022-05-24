@@ -698,7 +698,12 @@ public class JournalEditArticleDisplayContext {
 				DDMFormValuesToMapConverter.class.getName());
 
 		return ddmFormValuesToMapConverter.convert(
-			getDDMFormValues(ddmStructure), ddmStructure);
+			getValuesFromRequest(ddmStructure), ddmStructure);
+	}
+
+	public DDMFormValues getValuesFromRequest(DDMStructure ddmStructure) {
+		return _getDDMFormValuesFactory().create(
+			_httpServletRequest, ddmStructure.getDDMForm());
 	}
 
 	public double getVersion() {
