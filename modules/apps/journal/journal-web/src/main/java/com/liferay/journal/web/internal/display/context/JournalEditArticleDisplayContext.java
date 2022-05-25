@@ -701,9 +701,23 @@ public class JournalEditArticleDisplayContext {
 			getValuesFromRequest(ddmStructure), ddmStructure);
 	}
 
-	public DDMFormValues getValuesFromRequest(DDMStructure ddmStructure) {
-		return _getDDMFormValuesFactory().create(
-			_httpServletRequest, ddmStructure.getDDMForm());
+	public DDMFormValues getValuesFromRequest(DDMStructure ddmStructure)
+		throws PortalException {
+
+		if (_ddmFormValues != null) {
+			return _ddmFormValues;
+		}
+
+		DDMFormValuesFactory ddmFormValuesFactory = _getDDMFormValuesFactory();
+
+		if (ddmFormValuesFactory.isAnyDDMFormValueEdited(
+				_httpServletRequest, ddmStructure.getDDMForm())) {
+
+			return ddmFormValuesFactory.create(
+				_httpServletRequest, ddmStructure.getDDMForm());
+		}
+
+		return getDDMFormValues(ddmStructure);
 	}
 
 	public double getVersion() {
