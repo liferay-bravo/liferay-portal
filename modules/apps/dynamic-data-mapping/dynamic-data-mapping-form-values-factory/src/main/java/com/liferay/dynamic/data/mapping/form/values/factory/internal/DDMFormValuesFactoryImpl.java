@@ -86,6 +86,29 @@ public class DDMFormValuesFactoryImpl implements DDMFormValuesFactory {
 		return create(_portal.getHttpServletRequest(portletRequest), ddmForm);
 	}
 
+	public boolean isAnyDDMFormValueEdited(
+		HttpServletRequest httpServletRequest, DDMForm ddmForm) {
+
+		DDMFormValues ddmFormValues = new DDMFormValues(ddmForm);
+
+		_setDDMFormValuesAvailableLocales(
+			httpServletRequest, ddmForm, ddmFormValues);
+
+		Set<String> ddmFormFieldParameterNames = _getDDMFormFieldParameterNames(
+			httpServletRequest, ddmForm);
+
+		for (String ddmFormFieldParameterName : ddmFormFieldParameterNames) {
+			if (_isDDMFormValueEdited(
+					httpServletRequest, ddmFormValues,
+					ddmFormFieldParameterName)) {
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
@@ -438,6 +461,31 @@ public class DDMFormValuesFactoryImpl implements DDMFormValuesFactory {
 				DDMFormRendererConstants.DDM_FORM_FIELD_NAME_PREFIX)) {
 
 			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _isDDMFormValueEdited(
+		HttpServletRequest httpServletRequest, DDMFormValues ddmFormValues,
+		String ddmFormFieldParameterName) {
+
+		for (Locale availableLocale : ddmFormValues.getAvailableLocales()) {
+			String fullDDMFormFieldParameterName =
+				_getFullDDMFormFieldParameterName(
+					ddmFormFieldParameterName, availableLocale);
+
+			String parameterValue = httpServletRequest.getParameter(
+				fullDDMFormFieldParameterName);
+
+			if (GetterUtil.getBoolean(
+					httpServletRequest.getParameter(
+						fullDDMFormFieldParameterName + "_edited"),
+					true) &&
+				(parameterValue != null)) {
+
+				return true;
+			}
 		}
 
 		return false;
