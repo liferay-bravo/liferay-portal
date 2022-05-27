@@ -429,12 +429,27 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 						sb.append(stringArray);
 					}
-					else {
-						if (type.equals(DDMFormFieldTypeConstants.RICH_TEXT)) {
-							valueString = _htmlParser.extractText(valueString);
-						}
+					else if (type.equals(DDMFormFieldTypeConstants.RICH_TEXT)) {
+						valueString = _htmlParser.extractText(valueString);
 
 						sb.append(valueString);
+					}
+					else if (type.equals(
+								DDMFormFieldTypeConstants.DOCUMENT_LIBRARY) ||
+							 type.equals(DDMFormFieldTypeConstants.IMAGE) ||
+							 type.equals(
+								 DDMFormFieldTypeConstants.JOURNAL_ARTICLE) ||
+							 type.equals(
+								 DDMFormFieldTypeConstants.LINK_TO_LAYOUT)) {
+
+						JSONObject jsonObject =
+							JSONFactoryUtil.createJSONObject(valueString);
+
+						if ((jsonObject != null) && jsonObject.has("title")) {
+							valueString = jsonObject.getString("title");
+
+							sb.append(valueString);
+						}
 					}
 				}
 
