@@ -176,11 +176,15 @@ const Page = ({
 	if (pages?.[activePage]) {
 		const visitor = new PagesVisitor([pages[activePage]]);
 
-		visitor.mapFields((field) => {
-			if (field.required) {
-				hasFieldRequired = true;
-			}
-		});
+		visitor.mapFields(
+			(field) => {
+				if (field.required) {
+					hasFieldRequired = true;
+				}
+			},
+			true,
+			true
+		);
 	}
 
 	const isDDMFormPortletNamespace = portletNamespace.includes(
