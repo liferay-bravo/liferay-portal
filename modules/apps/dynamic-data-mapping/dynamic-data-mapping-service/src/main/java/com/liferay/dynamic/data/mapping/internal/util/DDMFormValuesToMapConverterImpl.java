@@ -108,7 +108,8 @@ public class DDMFormValuesToMapConverterImpl
 		if (ddmFormField.isLocalizable()) {
 			values.put(
 				"value",
-				_toLocalizedMap(ddmFormField.getType(), (LocalizedValue)value));
+				_toLocalizedMap(
+					ddmFormField.getType(), _translateLocalizedValue(value)));
 		}
 		else {
 			values.put("value", value.getString(value.getDefaultLocale()));
@@ -198,6 +199,22 @@ public class DDMFormValuesToMapConverterImpl
 
 			return Collections.emptyList();
 		}
+	}
+
+	private LocalizedValue _translateLocalizedValue(Value value) {
+		if (value == null) {
+			return null;
+		}
+
+		LocalizedValue translatedLocalizedValue = new LocalizedValue();
+
+		translatedLocalizedValue.setDefaultLocale(value.getDefaultLocale());
+
+		Map<Locale, String> values = translatedLocalizedValue.getValues();
+
+		values.putAll(value.getValues());
+
+		return translatedLocalizedValue;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
