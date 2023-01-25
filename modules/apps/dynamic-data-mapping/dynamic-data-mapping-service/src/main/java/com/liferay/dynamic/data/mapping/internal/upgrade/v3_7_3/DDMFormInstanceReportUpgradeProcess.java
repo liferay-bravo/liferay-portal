@@ -114,7 +114,11 @@ public class DDMFormInstanceReportUpgradeProcess extends UpgradeProcess {
 
 				ResultSet resultSet2 = preparedStatement2.executeQuery();
 
-				while (resultSet2.next()) {
+				if (!resultSet2.next()) {
+					continue;
+				}
+
+				do {
 					dataJSONObject = _processDDMFormValues(
 						dataJSONObject,
 						_getDDMFormValues(
@@ -127,6 +131,7 @@ public class DDMFormInstanceReportUpgradeProcess extends UpgradeProcess {
 					dataJSONObject.put(
 						"totalItems", dataJSONObject.getInt("totalItems") + 1);
 				}
+				while (resultSet2.next());
 
 				long groupId = resultSet1.getLong("groupId");
 
